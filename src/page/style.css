@@ -1,0 +1,27 @@
+.all{
+    margin: 2%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+
+}
+.left{
+   
+    margin-left: 0%;
+}
+.right{
+ 
+    
+    margin-right: 0%;
+
+}
+.top{
+
+
+    margin-top: 0%;
+}
+.down{
+   
+
+    margin-bottom: 0%;
+}
