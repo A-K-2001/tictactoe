@@ -127,14 +127,9 @@ const PlayGame = () => {
 
  
         const putmoves = async(e)=>{
-            const send ={
-                gameId:data.data.gameId,
-                user:data.data.user,
-                moves:data.data.moves,
-                turn:data.data.turn
-            }
+        
             try{
-                const res = await axios.put("http://127.0.0.1:5000/moves/"+move_Id,send);
+                const res = await axios.put("http://127.0.0.1:5000/api/moves/"+move_Id,{ moves:data.data.moves,turn:data.data.turn});
                 setData(res.data); 
                 setMoves(data.moves)
             }catch(err){
@@ -188,7 +183,7 @@ const PlayGame = () => {
             data.data.turn=5;
         }
         
-        putmoves();
+        // putmoves();
 
       };
 
