@@ -37,6 +37,7 @@ const InputDiv = styled.div`
 const Input = styled.input`
     border: 0ch;
     color: black;
+    outline: none;
     font-size: 100%;
     text-align: left;
 `;
@@ -91,7 +92,7 @@ const Login = () => {
         
         <H3>Password</H3>
         <InputDiv>
-            <Input onChange={(e)=>setPassword(e.target.value)} placeholder="Type your password here"/>
+            <Input type="password" onChange={(e)=>setPassword(e.target.value)} placeholder="Type your password here"/>
         </InputDiv>
 
     

@@ -35,7 +35,10 @@ const InputDiv = styled.div`
 const Input = styled.input`
     border: 0ch;
     color: black;
+    border: none;
+    border-color: white;
     font-size: 100%;
+    outline: none;
     text-align: left;
 `;
 const H3 = styled.h3`
@@ -49,6 +52,9 @@ const NewGame = () => {
 
     const [user2, setUser2] = useState("")
     const user = useSelector(state=>state.user.currentUser);
+    const [status,setstatus] =useState("");
+    const [error,seterror] =useState("");
+
     // console.log(user.email);
     const user1 = user.email;
     
@@ -56,8 +62,10 @@ const NewGame = () => {
         try{
             const res = await axios.post("http://127.0.0.1:5000/api/game",{user1,user2})
             // console.log(res);
+            setstatus(res.status);
         }catch(err){
             // console.log(err);
+            seterror(err);
         }
     };
 
@@ -75,7 +83,7 @@ const NewGame = () => {
         <H1>Whom do you want to play with?</H1>
         <H3>Email</H3>
         <InputDiv>
-            <Input onChange={(e)=> setUser2(e.target.value)} id="Name" placeholder="Type their email here"/>
+            <Input  onChange={(e)=> setUser2(e.target.value)} id="Name" placeholder="Type their email here"/>
         </InputDiv>
         
 
@@ -83,6 +91,9 @@ const NewGame = () => {
     </Text>
    
     <RegisterBOx>
+    {error &&  status!==201 && <Button color='red' text='Error'/>}
+    { status===201 && <Button color='green' text='Congratulations!!! Game created.'/>}
+   
        <div onClick={handleClick}>
         <Button  color='#efad1a' text='Start game'/>
        </div>

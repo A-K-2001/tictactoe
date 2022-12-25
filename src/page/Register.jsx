@@ -36,6 +36,7 @@ const InputDiv = styled.div`
 const Input = styled.input`
     border: 0ch;
     color: black;
+    outline: none;
     font-size: 100%;
     text-align: left;
 `;
@@ -106,7 +107,7 @@ const Register = () => {
         
         <H3>Password</H3>
         <InputDiv>
-            <Input onChange={(e)=>setpassword(e.target.value)}
+            <Input type="password" onChange={(e)=>setpassword(e.target.value)}
             id="password" placeholder="Type your password here"/>
         </InputDiv>
 
@@ -115,7 +116,7 @@ const Register = () => {
    
     <RegisterBOx>
     {error &&  status!==201 && <Button color='red' text='Enter correct details'/>}
-        { status===201 && <Button color='green' text='Congratulations!!! Account created.'/>}
+    { status===201 && <Button color='green' text='Congratulations!!! Account created.'/>}
         <div onClick={ handleClick}  >
         <Button  color='#efad1a' text='Regiter'/>
         </div>

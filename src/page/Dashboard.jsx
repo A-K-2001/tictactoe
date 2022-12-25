@@ -60,7 +60,7 @@ const Dashboard = () => {
 
   const handleClick = (e)=>{
     
-    // dispatch(logout());
+    dispatch(logout());
 
     
   };
@@ -86,7 +86,7 @@ const Dashboard = () => {
   
   games.reverse();  // reverse to show accending order of create
 
-  console.log(games);
+  // console.log(games);
 
 
 
@@ -94,7 +94,7 @@ const Dashboard = () => {
   return (
     <div>
         <Div1>
-            <H3>Your Games</H3>
+            <H3 onClick={ handleClick}>Your Games</H3>
         </Div1>
          {games.length === 0 && <div>
           <Div2>
@@ -114,7 +114,7 @@ const Dashboard = () => {
         <Games Name='Anil' ></Games> */}
         <Link to="/newgame">
 
-        <New onClick={ handleClick}><H2>+ New Game</H2></New>
+        <New ><H2>+ New Game</H2></New>
         </Link>
 
     </div>

@@ -59,10 +59,16 @@ const Games = ({gameId , user1 , user2}) => {
     // console.log(gameId);
     // console.log(user1);
     // console.log(user2);
-    const user = useSelector(state=>state.user.currentUser);
-
+    const user = useSelector(state=>state.user.currentUser.email);
+    // console.log(user);
     const [name, setname] = useState("");
-    const [turnn, setTurn] = useState(0);
+    const [turnn, setTurnn] = useState(0);
+    const [turn, setTurn] = useState(0);
+    const [tursec, setTurnsec] = useState(0);
+    const [win, setTwin] = useState(0);
+    const [lose, setLose] = useState();
+
+
     const [moves, setMoves] = useState([]);
 
     
@@ -73,11 +79,12 @@ const Games = ({gameId , user1 , user2}) => {
                 try {
                 const res = await publicRequest.get("/auth/find/" + user2);
                 setname(res.data.name);
+                
                 } catch { }
             };
             const getuser2 = async () => {
                 try {
-                const res = await publicRequest.get("/game/find/" + user1);
+                const res = await publicRequest.get("/auth/find/" + user1);
                 setname(res.data.name);
                 } catch { }
             };
@@ -85,21 +92,29 @@ const Games = ({gameId , user1 , user2}) => {
                 try {
                 const res = await publicRequest.get("/moves/find/" + gameId);
                 setMoves(res.data);
+                setTurn(res.data.turn);
                 } catch { }
             };
             getmoves();
             // console.log(moves.turn);
-
-            if(user.email==user1){
+            // console.log(user,user1);
+            if(user===user1){
                     getuser1();
-                    setTurn(0);
+                    setTurnn(1);
+                    setTwin(3);
+                    setLose(4);
+                    setTurnsec(2);
             }
             else{
+                // console.log("yes");
                 getuser2();
-                setTurn(1);
+                setTurnn(2);
+                setTwin(4);
+                setLose(3);
+                setTurnsec(1);
             }
     }, [gameId , user1 , user2])
-    // console.log(moves);
+    // console.log(turn,tursec);
 
     const navigate = useNavigate();
     
@@ -114,22 +129,22 @@ const Games = ({gameId , user1 , user2}) => {
     <Div>
         <H1>Game with {name}</H1>
         <Div1>
-        {turnn=== moves?.turn ? <H3>Tanmay just make their move!</H3> : <H3>You just make Your move!</H3>}
+        {turnn=== turn ? <H3>{name} just make their move!</H3> : <H3>You just make Your move!</H3>}
             
-            {turnn=== moves?.turn ? <H3>It's your turn to play</H3> :<H3>It's {name} turn to play</H3> }
+        {turnn=== turn ? <H3>It's your turn to play</H3> :<H3>It's {name} turn to play</H3> }
         </Div1>
         <Div2>
-            <H3>{format(moves?.createdAt)}</H3>
+            <H3>{format(moves?.updatedAt)}</H3>
         </Div2>
         
         <div onClick={handleclick}>
 
         <Buttonn>
-        {moves.turn == 3 ? <H2>Your move</H2>:<></>}
-        {moves.turn == 4 ? <H2>Your move</H2>:<></>}
-        {moves.turn == 5 ? <H2>Your move</H2>:<></>}
-        {moves.turn == 1 ? <H2>Your move</H2>:<></>}
-        {moves.turn == 2 ? <H2>Your move</H2>:<></>}
+        {turn == win ? <H2>You win!</H2>:<></>}
+        {turn == lose ? <H2>Your Lose!</H2>:<></>}
+        {turn == 5 ? <H2>Tie!</H2>:<></>}
+        {turn === turnn ? <H2>Your move</H2>:<></>}
+        {turn === tursec ? <H2>{name} move</H2>:<></>}
 
         </Buttonn>
         </div>
