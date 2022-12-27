@@ -2,7 +2,7 @@ import { IoIosArrowBack} from "react-icons/io";
 import { ImCross} from "react-icons/im";
 import { BsFillRecordCircleFill } from "react-icons/bs";
 import "./style.css";
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import Button from "../components/Button";
 import { Link, useLocation } from "react-router-dom";
@@ -10,6 +10,8 @@ import { publicRequest } from "../requestMethods";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { render } from "@testing-library/react";
+import { io, Socket } from "socket.io-client"
+
 
 
 const RegisterBOx = styled.div`
@@ -94,48 +96,95 @@ const PlayGame = () => {
     const move_Id = location.pathname.split("/")[2];
     const [isLoading, setLoading] = useState(true);
     const [turnf, setTurnf] = useState(1);
+    const [gameId, setGameId] = useState("");
     const [turn, setTurn] = useState(1);
     const [win, setWin] = useState();
+    const [reciver, setReciver] = useState("");
     const [lose, setLose] = useState();
     const [turnsec, setTurnsec] = useState(2);
     const [data, setData] = useState([]);
     const [moves, setMoves] = useState([0,0,0,0,0,0,0,0,0]);
     const user = useSelector(state=>state.user.currentUser);
+    // const userid = useSelector(state=>state.user.currentUser.gmail);
+    const socket = useRef();
+    const scrollref = useRef();
+
+    useEffect(() => {
+        socket.current = io("ws://127.0.0.1:5000");
+        socket.current.on("getMessage",(data)=>{
+
+            setMoves(data.moves);
+            setTurn(data.turn);
+
+        }); 
+    }, [])
+    useEffect(() => {
+        socket.current.emit("adduser",user);
+        // socket.current.on("getUsers",users=>{
+        //     // console.log(users);
+        // })
+    }, [user.email]);
+
+    const getgame = async ()=>{
+
+        try{
+            const res = await axios.get("http://127.0.0.1:5000/api/game/findm/" + gameId);
+            // console.log(res.data);
+            if(res.data.user1===user.email)setReciver(res.data.user2);
+            else(setReciver(res.data.user1))
+            // console.log(reciver);
+            // console.log(user.email);
+
+
+
+        }catch(err){
+            // console.log(err);
+        }
+    }
+
+    
 
     const getmoves = async () => {
         try {
         const res = await axios.get("http://127.0.0.1:5000/api/moves/findm/" + move_Id);
           
              setMoves(res.data.moves);
+             setGameId(res.data.gameId);
             
             setTurn(res.data.turn);
             if(user.email===res.data.user){
-                console.log("yess");
+                // console.log("yess");
                 setTurnf(1);
                 setWin(3);
                 setLose(4);
                 setTurnsec(2);
             }else{
-                console.log("no");
+                // console.log("no");
                 setTurnf(2);
                 setWin(4);
                 setLose(3);
                 setTurnsec(1);
             }
+            // console.log("yes");
+           
+            
             setLoading(false);
         } catch { }
     };
-
-
-
-
+    
+    
+    
+    getgame();
+    
+    
     useEffect(() => {
-
+        
         
         getmoves();  
+        // setTimeout(() => console.log('Initial timeout!'), 1000);
         // console.log(moves);
         
-    }, []);
+    }, [moves]);
     
     
     
@@ -156,7 +205,7 @@ const PlayGame = () => {
         };
 
         const reset = async(e)=>{
-            console.log("yes");
+            // console.log("yes");
             try{
                 let m=[0,0,0,0,0,0,0,0,0];
                 const res = await axios.put("http://127.0.0.1:5000/api/moves/"+move_Id,{ moves:m,turn:1});
@@ -170,20 +219,20 @@ const PlayGame = () => {
         // console.log(turn,turnf);
 
     const handleClick = (e)=>{
-        console.log("yes");
+        // console.log("yes");
         // console.log(moves[e.target.id],data.turn,turn,"yes");
-    
+        
         if(moves[e.target.id]===0 && turn===turnf){
             let arr=moves;
             arr[e.target.id]=turnf;
             setMoves(arr);
             // console.log(moves);
             // console.log(moves[e.target.id]);
-            console.log(turnsec);
-            console.log(turn);
+            // console.log(turnsec);
+            // console.log(turn);
             sec = turnsec;
             setTurn(sec);
-            console.log(turn);
+            // console.log(turn);
             putmoves();
             // console.log(e.target.id);
         
@@ -235,7 +284,13 @@ const PlayGame = () => {
         else if(moves[0]!==0 && moves[1]!==0 && moves[2]!==0 && moves[3]!==0 && moves[4]!==0 && moves[5]!==0 && moves[6]!==0 && moves[7]!==0 && moves[8]!==0){
             setTurn(5);sec = 5; putmoves();
         }
-        
+        socket.current.emit("sendMessage",{
+            senderId:user.email,
+            reciver,
+            turn:sec,
+            moves:moves,
+        });
+
        
 
       };
@@ -273,9 +328,9 @@ const PlayGame = () => {
     </Text>
 
     <GameDiv>
-    {turn == win ? <GameA>Win!</GameA> :<></>}
-    {turn == lose ? <GameA>Loose!</GameA> :<></>}
-    {turn == 5 ? <GameA>Tie!</GameA> :<></>}
+    {turn === win ? <GameA>Win!</GameA> :<></>}
+    {turn === lose ? <GameA>Loose!</GameA> :<></>}
+    {turn === 5 ? <GameA>Tie!</GameA> :<></>}
     {turn === turnf ? <GameA>Your move</GameA> :<></>}
     {turn === turnsec ? <GameA>wait for Your move</GameA> :<></>}
 
