@@ -110,7 +110,7 @@ const PlayGame = () => {
     const scrollref = useRef();
 
     useEffect(() => {
-        socket.current = io("ws://127.0.0.1:5000");
+        socket.current = io("ws://tictactoe-api-5jxw.onrender.com");
         socket.current.on("getMessage",(data)=>{
 
             setMoves(data.moves);
@@ -128,7 +128,7 @@ const PlayGame = () => {
     const getgame = async ()=>{
 
         try{
-            const res = await axios.get("http://127.0.0.1:5000/api/game/findm/" + gameId);
+            const res = await axios.get("https://tictactoe-api-5jxw.onrender.com/api/game/findm/" + gameId);
             // console.log(res.data);
             if(res.data.user1===user.email)setReciver(res.data.user2);
             else(setReciver(res.data.user1))
@@ -146,7 +146,7 @@ const PlayGame = () => {
 
     const getmoves = async () => {
         try {
-        const res = await axios.get("http://127.0.0.1:5000/api/moves/findm/" + move_Id);
+        const res = await axios.get("https://tictactoe-api-5jxw.onrender.com/api/moves/findm/" + move_Id);
           
              setMoves(res.data.moves);
              setGameId(res.data.gameId);
@@ -194,8 +194,8 @@ const PlayGame = () => {
         const putmoves = async(e)=>{
         
             try{
-                const res = await axios.put("http://127.0.0.1:5000/api/moves/"+move_Id,{ moves:moves,turn:sec});
-                // const ress = await axios.put("http://127.0.0.1:5000/api/moves/"+move_Id,{ turn:turn});
+                const res = await axios.put("https://tictactoe-api-5jxw.onrender.com/api/moves/"+move_Id,{ moves:moves,turn:sec});
+                // const ress = await axios.put("https://tictactoe-api-5jxw.onrender.com/api/moves/"+move_Id,{ turn:turn});
 
                 // setData(res.data); 
                 // setMoves(data.moves);
@@ -208,7 +208,7 @@ const PlayGame = () => {
             // console.log("yes");
             try{
                 let m=[0,0,0,0,0,0,0,0,0];
-                const res = await axios.put("http://127.0.0.1:5000/api/moves/"+move_Id,{ moves:m,turn:1});
+                const res = await axios.put("https://tictactoe-api-5jxw.onrender.com/api/moves/"+move_Id,{ moves:m,turn:1});
                 
             }catch(err){
                 console.log(err);

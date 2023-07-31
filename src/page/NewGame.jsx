@@ -60,7 +60,7 @@ const NewGame = () => {
     
     const handleClick = async(e)=>{
         try{
-            const res = await axios.post("http://127.0.0.1:5000/api/game",{user1,user2})
+            const res = await axios.post("https://tictactoe-api-5jxw.onrender.com/api/game",{user1,user2})
             // console.log(res);
             setstatus(res.status);
         }catch(err){

@@ -61,7 +61,7 @@ const Register = () => {
   
     const handleClick = async(e)=>{
         try{
-            const res = await axios.post("http://127.0.0.1:5000/api/auth/register",{name,username,email,password})
+            const res = await axios.post("https://tictactoe-api-5jxw.onrender.com/api/auth/register",{name,username,email,password})
             // console.log(res.status);
             setemail(" ");
             setname(" ");
